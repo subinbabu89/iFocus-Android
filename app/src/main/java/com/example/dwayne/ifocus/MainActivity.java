@@ -12,19 +12,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.example.dwayne.ifocus.budget.BudgetHistoryDatabase;
 import com.example.dwayne.ifocus.health.history.HealthHistoryDatabase;
+import com.example.dwayne.ifocus.study.history.StudyHistoryDatabase;
+import com.example.dwayne.ifocus.user.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
      ViewPager view_pager;
     private HealthHistoryDatabase healthHistoryDatabase;
+    private BudgetHistoryDatabase budgetHistoryDatabase;
+    private StudyHistoryDatabase studyHistoryDatabase;
 
     public HealthHistoryDatabase getHealthHistoryDatabase() {
         return healthHistoryDatabase;
     }
 
+    public BudgetHistoryDatabase getBudgetHistoryDatabase() {
+        return budgetHistoryDatabase;
+    }
+
+    public StudyHistoryDatabase getStudyHistoryDatabase(){ return studyHistoryDatabase; }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +63,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 view_pager.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
@@ -76,6 +89,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         healthHistoryDatabase = new HealthHistoryDatabase(this);
+        studyHistoryDatabase = new StudyHistoryDatabase(this);
+        setNavigationDrawerData();
+
     }
 
     @Override
@@ -126,7 +142,21 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+
+
         return true;
+
+    }
+
+    public void setNavigationDrawerData(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header=navigationView.getHeaderView(0);
+        final Menu menu = navigationView.getMenu();
+        menu.getItem(0).setTitle("Score is "+User.getInstance().getUserScore());
+
+        TextView txtv_username = (TextView)header.findViewById(R.id.txtv_username);
+        txtv_username.setText(User.getInstance().getUserName());
     }
 
 }

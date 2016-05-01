@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.example.dwayne.ifocus.budget.BudgetHistoryFragment;
 import com.example.dwayne.ifocus.health.history.HealthHistoryFragment;
+import com.example.dwayne.ifocus.study.history.StudyHistoryFragment;
 
 /**
  * Created by Subin on 4/8/2016.

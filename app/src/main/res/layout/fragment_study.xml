@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/lst_health_tasks"
+        android:id="@+id/lst_study_tasks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_health_task"
+        android:id="@+id/fab_add_study_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_input_add"

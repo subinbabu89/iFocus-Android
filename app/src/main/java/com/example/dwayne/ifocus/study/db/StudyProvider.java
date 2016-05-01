@@ -1,4 +1,4 @@
-package com.example.dwayne.ifocus.health.db;
+package com.example.dwayne.ifocus.study.db;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -15,48 +15,48 @@ import com.example.dwayne.ifocus.db.iFocusDatabase;
 /**
  * Created by Subin on 4/9/2016.
  */
-public class HealthProvider extends ContentProvider {
+public class StudyProvider extends ContentProvider {
 
-    private iFocusDatabase healthDatabase;
+    private iFocusDatabase studyDatabase;
 
-    private static final int HEALTH = 102;
-    private static final int HEALTH_ID = 103;
+    private static final int STUDY = 104;
+    private static final int STUDY_ID = 105;
 
     private static final UriMatcher URI_MATCHER = buildUriMatcher();
 
     public static UriMatcher buildUriMatcher(){
         final UriMatcher matcher =new UriMatcher(UriMatcher.NO_MATCH);
-        final String authority = HealthContract.CONTENT_AUTHORITY;
-        matcher.addURI(authority,"health",HEALTH);
-        matcher.addURI(authority,"health/*",HEALTH_ID);
+        final String authority = StudyContract.CONTENT_AUTHORITY;
+        matcher.addURI(authority,"study",STUDY);
+        matcher.addURI(authority,"study/*",STUDY_ID);
         return matcher;
     }
 
     @Override
     public boolean onCreate() {
-        healthDatabase = new iFocusDatabase(getContext());
+        studyDatabase = new iFocusDatabase(getContext());
         return true;
     }
 
     public void deleteDatabase(){
-        healthDatabase.close();
+        studyDatabase.close();
     }
 
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        final SQLiteDatabase database = healthDatabase.getReadableDatabase();
+        final SQLiteDatabase database = studyDatabase.getReadableDatabase();
         final int match = URI_MATCHER.match(uri);
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(iFocusDatabase.Tables.HEALTH);
+        builder.setTables(iFocusDatabase.Tables.STUDY);
 
         switch (match){
-            case HEALTH:
+            case STUDY:
                 break;
-            case HEALTH_ID:
-                String id = HealthContract.Health.getHealthId(uri);
-                builder.appendWhere(HealthContract.HealthColumns.HEALTH_ID + " = "+id);
+            case STUDY_ID:
+                String id = StudyContract.Study.getStudyId(uri);
+                builder.appendWhere(StudyContract.StudyColumns.STUDY_ID + " = "+id);
                 break;
             default:
                 throw new IllegalArgumentException("unKnown URI "+ uri);
@@ -71,10 +71,10 @@ public class HealthProvider extends ContentProvider {
     public String getType(Uri uri) {
         final int match = URI_MATCHER.match(uri);
         switch (match){
-            case HEALTH:
-                return HealthContract.Health.CONTENT_TYPE;
-            case HEALTH_ID:
-                return HealthContract.Health.CONTENT_ITEM_TYPE;
+            case STUDY:
+                return StudyContract.Study.CONTENT_TYPE;
+            case STUDY_ID:
+                return StudyContract.Study.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("unKnown URI "+ uri);
         }
@@ -83,13 +83,13 @@ public class HealthProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        final SQLiteDatabase database = healthDatabase.getWritableDatabase();
+        final SQLiteDatabase database = studyDatabase.getWritableDatabase();
         final int match = URI_MATCHER.match(uri);
 
         switch (match){
-            case HEALTH:
-                long recordID = database.insertOrThrow(iFocusDatabase.Tables.HEALTH,null,values);
-                return HealthContract.Health.buildHealthUri(String.valueOf(recordID));
+            case STUDY:
+                long recordID = database.insertOrThrow(iFocusDatabase.Tables.STUDY,null,values);
+                return StudyContract.Study.buildStudyUri(String.valueOf(recordID));
             default:
                 throw new IllegalArgumentException("unKnown URI "+ uri);
         }
@@ -98,20 +98,20 @@ public class HealthProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
-        final SQLiteDatabase database = healthDatabase.getWritableDatabase();
+        final SQLiteDatabase database = studyDatabase.getWritableDatabase();
         final int match = URI_MATCHER.match(uri);
 
-        if(uri.equals(HealthContract.BASE_CONTENT_URI)){
+        if(uri.equals(StudyContract.BASE_CONTENT_URI)){
             deleteDatabase();
             return 0;
         }
 
         switch (match){
-            case HEALTH_ID:
-                String id = HealthContract.Health.getHealthId(uri);
-                String selectionCriteria = HealthContract.HealthColumns.HEALTH_ID + " = " + id
+            case STUDY_ID:
+                String id = StudyContract.Study.getStudyId(uri);
+                String selectionCriteria = StudyContract.StudyColumns.STUDY_ID + " = " + id
                         + (!TextUtils.isEmpty(selection)?" AND (" + selection + ")":"");
-                return  database.delete(iFocusDatabase.Tables.HEALTH,selectionCriteria,selectionArgs);
+                return  database.delete(iFocusDatabase.Tables.STUDY,selectionCriteria,selectionArgs);
             default:
                 throw new IllegalArgumentException("unKnown URI "+ uri);
         }
@@ -119,22 +119,22 @@ public class HealthProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        final SQLiteDatabase database = healthDatabase.getWritableDatabase();
+        final SQLiteDatabase database = studyDatabase.getWritableDatabase();
         final int match = URI_MATCHER.match(uri);
 
         String selectionCriteria = selection;
 
         switch (match){
-            case HEALTH:
+            case STUDY:
                 break;
-            case HEALTH_ID:
-                String id = HealthContract.Health.getHealthId(uri);
-                selectionCriteria = HealthContract.HealthColumns.HEALTH_ID + " = " + id
+            case STUDY_ID:
+                String id = StudyContract.Study.getStudyId(uri);
+                selectionCriteria = StudyContract.StudyColumns.STUDY_ID + " = " + id
                         +(!TextUtils.isEmpty(selection)?" AND ("+selection+")":"");
                 break;
             default:
                 throw new IllegalArgumentException("unKnown URI "+ uri);
         }
-        return database.update(iFocusDatabase.Tables.HEALTH,values,selectionCriteria,selectionArgs);
+        return database.update(iFocusDatabase.Tables.STUDY,values,selectionCriteria,selectionArgs);
     }
 }
